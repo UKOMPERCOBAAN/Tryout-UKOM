@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CBT Tryout</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      display: flex;
+      gap: 32px;
+    }
+    .main-content {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .progress-header {
+      background: #6c3fcf;
+      color: #fff;
+      border-radius: 16px 16px 0 0;
+      padding: 20px 36px 12px 36px;
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: -8px;
+      box-shadow: 0 2px 12px rgba(108,63,207,0.10);
+    }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e0d7f7;
+      border-radius: 5px;
+      margin-top: 12px;
+      position: relative;
+    }
+    .progress {
+      height: 100%;
+      background: #ffb300;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    .timer {
+      position: absolute;
+      right: 36px;
+      top: 20px;
+      background: #fff;
+      color: #6c3fcf;
+      padding: 7px 22px;
+      border-radius: 22px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(108,63,207,0.08);
+    }
+    .card {
+      background: #fff;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 2px 12px rgba(108,63,207,0.10);
+      padding: 36px 36px 28px 36px;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 24px;
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .question {
+      font-size: 1.15rem;
+      margin-bottom: 28px;
+      font-weight: 500;
+      color: #3a2e6c;
+    }
+    .answer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .answer-list button {
+      background: #f5f7fa;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      padding: 16px 18px;
+      font-size: 1.08rem;
+      color: #3a2e6c;
+      cursor: pointer;
+      font-weight: 500;
+      transition: border 0.2s, background 0.2s;
+      outline: none;
+    }
+    .answer-list button.active, .answer-list button:focus {
+      border: 2px solid #6c3fcf;
+      background: #e0d7f7;
+      color: #6c3fcf;
+    }
+    .answer-list button:hover {
+      border: 2px solid #6c3fcf;
+      background: #ede6fa;
+    }
+    .ragu {
+      color: #ffb300;
+      font-weight: bold;
+      margin-bottom: 18px;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .next-btn {
+      background: #6c3fcf;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 38px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(108,63,207,0.08);
+      transition: background 0.2s;
+    }
+    .next-btn:disabled {
+      background: #e0d7f7;
+      color: #b3a6e6;
+      cursor: not-allowed;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(108,63,207,0.10);
+      padding: 28px 22px;
+      margin-bottom: 18px;
+    }
+    .panel-title {
+      font-weight: bold;
+      color: #6c3fcf;
+      margin-bottom: 14px;
+      font-size: 1.08rem;
+    }
+    .summary {
+      display: flex;
+      gap: 22px;
+      margin-bottom: 18px;
+      justify-content: space-between;
+    }
+    .summary-item {
+      text-align: center;
+      flex: 1;
+    }
+    .summary-item .label {
+      font-size: 0.98rem;
+      color: #888;
+      margin-bottom: 2px;
+    }
+    .summary-item .value {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #6c3fcf;
+    }
+    .summary-item.ragu .value {
+      color: #ffb300;
+    }
+    .summary-item.kosong .value {
+      color: #444;
+    }
+    .nav-soal {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .nav-soal button {
+      background: #e0d7f7;
+      color: #6c3fcf;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 0;
+      font-size: 1.08rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s, color 0.2s;
+      outline: none;
+    }
+    .nav-soal button.active {
+      background: #6c3fcf;
+      color: #fff;
+    }
+    .nav-soal button.ragu {
+      border: 2px solid #ffb300;
+    }
+    .nav-soal button.answered {
+      background: #ffb300;
+      color: #fff;
+    }
+    .nav-soal button:focus {
+      box-shadow: 0 0 0 2px #6c3fcf33;
+    }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; align-items: center; }
+      .sidebar { width: 100%; max-width: 600px; margin: 0 auto; }
+      .main-content { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-content">
+      <div class="progress-header">
+        <span id="qCounter">1/5</span>
+        <span class="timer" id="timeLeft">05:00</span>
+        <div class="progress-bar">
+          <div class="progress" id="progressBar"></div>
+        </div>
+        <div class="nav-soal" id="numgrid" style="margin-top:18px;"></div>
+      </div>
+      <div class="card">
+        <div id="screenIntro" class="text-center">
+          <button id="btnStart" class="next-btn" style="float:none;">Mulai Ujian</button>
+        </div>
+        <div id="screenQuiz" class="d-none">
+          <div class="question" id="qText"></div>
+          <div id="choices" class="answer-list"></div>
+          <div class="ragu" style="margin-top:18px;"><input type="checkbox" id="ragu"> <label for="ragu">Ragu-ragu</label></div>
+          <div class="d-flex" style="justify-content:space-between; margin-top:24px;">
+            <button id="btnPrev" class="next-btn" style="background:#e0d7f7;color:#6c3fcf;">Prev</button>
+            <button id="btnNext" class="next-btn">Next</button>
+            <button id="btnSubmit" class="next-btn" style="background:#ffb300;color:#fff;display:none;">Kumpulkan</button>
+          </div>
+        </div>
+        <div id="screenResult" class="d-none">
+          <div id="scoreBox" class="d-none" style="margin-bottom:18px;"></div>
+          <h5>Review Jawaban</h5>
+          <ol id="reviewList"></ol>
+          <button class="next-btn" style="background:#e0d7f7;color:#6c3fcf;" onclick="location.reload()">Ulangi</button>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="panel">
+        <div class="panel-title">Nilai Normal Lab & Rumus</div>
+        <button style="background:#6c3fcf;color:#fff;border:none;border-radius:6px;padding:8px 16px;margin-right:8px;">Nilai Normal Lab</button>
+        <button style="background:#e0d7f7;color:#6c3fcf;border:none;border-radius:6px;padding:8px 16px;">Rumus</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Ringkasan Ujian</div>
+        <div class="summary">
+          <div class="summary-item">
+            <div class="label">Total Soal</div>
+            <div class="value" id="totalSoal">0</div>
+          </div>
+          <div class="summary-item">
+            <div class="label">Terjawab</div>
+            <div class="value" id="terjawab">0</div>
+          </div>
+          <div class="summary-item ragu">
+            <div class="label">Ragu-ragu</div>
+            <div class="value" id="raguCount">0</div>
+          </div>
+          <div class="summary-item kosong">
+            <div class="label">Kosong</div>
+            <div class="value" id="kosongCount">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Navigasi Soal</div>
+        <div class="nav-soal" id="sidebarNumgrid"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Import JS -->
+  <script src="questions.js"></script>
+  <script src="answerKey.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
